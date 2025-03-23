@@ -1,0 +1,46 @@
+{
+  "name": "react-chat-widget",
+  "private": false,
+  "version": "1.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/react-chat-widget.umd.js",
+  "module": "./dist/react-chat-widget.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/react-chat-widget.es.js",
+      "require": "./dist/react-chat-widget.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.2",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vite-plugin-css-injected-by-js": "^3.2.1",
+    "vite-plugin-dts": "^3.3.1"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3.13.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@reduxjs/toolkit": "^2.6.1",
+    "framer-motion": "^12.5.0"
+  }
+}
