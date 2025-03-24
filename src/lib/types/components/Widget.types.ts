@@ -1,4 +1,4 @@
 export interface WidgetProps {
-  deploymentId: string;
+  authToken: string;
   apiUrl: string;
 }

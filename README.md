@@ -36,7 +36,7 @@ yarn
 <script src="https://your-cdn.com/widget/latest/react-chat-widget.umd.js"></script>
 <script>
   window.MyWidget.init({
-    deploymentId: "<YOUR_DEPLOYMENT_ID>",
+    authToken: "<YOUR_AUTHRIZATION_TOKEN>",
     apiUrl: "<YOUR_API_URL>"
   }, function(api) {
     console.log("Widget initialized!");
@@ -54,7 +54,7 @@ yarn
 import { initWidget } from 'react-chat-widget';
 
 const api = initWidget({
-  deploymentId: '<YOUR_DEPLOYMENT_ID>',
+  authToken: '<YOUR_AUTHRIZATION_TOKEN>',
   apiUrl: '<YOUR_API_URL>'
 });
 
@@ -71,7 +71,7 @@ function App() {
   return (
     <div>
       <Widget 
-        deploymentId="<YOUR_DEPLOYMENT_ID>"
+        authToken="<YOUR_AUTHRIZATION_TOKEN>"
         apiUrl="<YOUR_API_URL>"
       />
     </div>

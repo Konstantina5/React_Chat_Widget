@@ -9,7 +9,7 @@ function App() {
     const loadWidget = () => {
       if (window.MyWidget) {
         const api = window.MyWidget.init({
-          deploymentId: 'demo-123',
+          authToken: 'demo-123',
           apiUrl: 'https://api.example.com/widget',
         }, () => {
           console.log('Widget initialized via callback!');
@@ -47,7 +47,7 @@ function App() {
         {`<script src="https://your-cdn.com/widget/latest/my-widget.umd.js"></script>
           <script>
             window.MyWidget.init({
-              deploymentId: "<YOUR_DEPLOYMENT_ID>",
+              authToken: "<YOUR_AUTHRIZATION_TOKEN>",
               apiUrl: "<YOUR_API_URL>",
             }, function(api) {
               console.log("Widget initialized!");

@@ -10,7 +10,7 @@ import { WidgetProps } from '../types/components/Widget.types';
 import ChakraProvider from './ChakraProvider';
 
 const Widget: React.FC<WidgetProps> = ({ 
-  deploymentId, 
+  authToken, 
   apiUrl,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,7 +72,7 @@ const Widget: React.FC<WidgetProps> = ({
             </Flex>
             <Box p={4} flex="1" overflowY="auto" backgroundColor={'white'}>
               <Text mb={2}>Hello from your embedded widget!</Text>
-              <Text fontSize="sm" mb={1}>Deployment ID: {deploymentId}</Text>
+              <Text fontSize="sm" mb={1}>Authorization Token: {authToken}</Text>
               <Text fontSize="sm">API URL: {apiUrl}</Text>
             </Box>
           </Box>
