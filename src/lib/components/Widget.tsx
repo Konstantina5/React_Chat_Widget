@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { WidgetProps } from '../types/components/Widget.types';
+import '../styles/Widget.css';
 
 const Widget: React.FC<WidgetProps> = ({ 
   authToken, 
@@ -26,34 +27,20 @@ const Widget: React.FC<WidgetProps> = ({
         </button>
       ) : (
         <div className="widget-content">
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: '48px',
-            padding: '12px',
-            backgroundColor: '#0073e6',
-            color: 'white'
-          }}>
-            <h3 style={{ margin: 0, fontSize: '16px' }}>My Widget</h3>
+          <div className="widget-header">
+            <h3 className="widget-title">My Widget</h3>
             <button
               aria-label="Close widget"
               onClick={handleClose}
-              style={{marginRight: '16px'}}
               className="widget-close-button"
             >
               ×
             </button>
           </div>
-          <div style={{
-            padding: '16px',
-            flex: '1',
-            overflowY: 'auto',
-            backgroundColor: 'white'
-          }}>
-            <p style={{ marginBottom: '8px' }}>Hello from your embedded widget!</p>
-            <p style={{ fontSize: '14px', marginBottom: '4px' }}>Authorization Token: {authToken}</p>
-            <p style={{ fontSize: '14px' }}>API URL: {apiUrl}</p>
+          <div className="widget-body">
+            <p className="widget-message">Hello from your embedded widget!</p>
+            <p className="widget-info">Authorization Token: {authToken}</p>
+            <p className="widget-info">API URL: {apiUrl}</p>
           </div>
         </div>
       )}
