@@ -1,13 +1,5 @@
-import React, { useState } from 'react';
-import { 
-  Box, 
-  Button, 
-  Flex, 
-  Heading, 
-  Text
-} from '@chakra-ui/react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { WidgetProps } from '../types/components/Widget.types';
-import ChakraProvider from './ChakraProvider';
 
 const Widget: React.FC<WidgetProps> = ({ 
   authToken, 
@@ -15,76 +7,57 @@ const Widget: React.FC<WidgetProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   
-  const WidgetContent = () => {
-    return (
-      <Box 
-        position="fixed"
-        bottom="20px"
-        right="20px"
-        zIndex={9999}
-      >
-        {!isOpen ? (
-          <Button
-            width="60px"
-            height="60px"
-            borderRadius="full"
-            color="white"
-            boxShadow="0 2px 10px rgba(0, 0, 0, 0.2)"
-            _hover={{ transform: 'scale(1.05)', boxShadow: '0 3px 12px rgba(0, 0, 0, 0.3)' }}
-            onClick={() => setIsOpen(true)}
-          >
-            Open
-          </Button>
-        ) : (
-          <Box
-            width="300px"
-            height="400px"
-            bg={'#222'}
-            borderRadius="10px"
-            boxShadow="0 5px 15px rgba(0, 0, 0, 0.2)"
-            overflow="hidden"
-            display="flex"
-            flexDirection="column"
-          >
-            <Flex
-              justify="space-between"
-              align="center"
-              p={3}
-              bg="#0073e6"
-              color="white"
-            >
-              <Heading size="sm">My Widget</Heading>
-              <Button
-                aria-label="Close widget"
-                size="sm"
-                variant="ghost"
-                color="white"
-                fontWeight="bold"
-                fontSize="20px"
-                lineHeight="1"
-                height="auto"
-                minWidth="auto"
-                padding="0"
-                onClick={() => setIsOpen(false)}
-              >
-                ×
-              </Button>
-            </Flex>
-            <Box p={4} flex="1" overflowY="auto" backgroundColor={'white'}>
-              <Text mb={2}>Hello from your embedded widget!</Text>
-              <Text fontSize="sm" mb={1}>Authorization Token: {authToken}</Text>
-              <Text fontSize="sm">API URL: {apiUrl}</Text>
-            </Box>
-          </Box>
-        )}
-      </Box>
-    );
-  };
+  const handleOpen = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+  
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
   
   return (
-    <ChakraProvider>
-      <WidgetContent />
-    </ChakraProvider>
+    <div className={`${isOpen ? 'open' : 'closed'}`}>
+      {!isOpen ? (
+        <button
+          onClick={handleOpen}
+          className="widget-open-button"
+        >
+          Open
+        </button>
+      ) : (
+        <div className="widget-content">
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '48px',
+            padding: '12px',
+            backgroundColor: '#0073e6',
+            color: 'white'
+          }}>
+            <h3 style={{ margin: 0, fontSize: '16px' }}>My Widget</h3>
+            <button
+              aria-label="Close widget"
+              onClick={handleClose}
+              style={{marginRight: '16px'}}
+              className="widget-close-button"
+            >
+              ×
+            </button>
+          </div>
+          <div style={{
+            padding: '16px',
+            flex: '1',
+            overflowY: 'auto',
+            backgroundColor: 'white'
+          }}>
+            <p style={{ marginBottom: '8px' }}>Hello from your embedded widget!</p>
+            <p style={{ fontSize: '14px', marginBottom: '4px' }}>Authorization Token: {authToken}</p>
+            <p style={{ fontSize: '14px' }}>API URL: {apiUrl}</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

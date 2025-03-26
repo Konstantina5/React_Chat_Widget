@@ -1,11 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
-import Widget from './lib/components/Widget';
-import './react-widget-wrapper.tsx';
+import './lib/react-widget-wrapper.tsx';
 
+/**
+ * App Component
+ * 
+ * This component is only used for development and preview purposes.
+ * It demonstrates how to use the React Chat Widget as a web component.
+ */
 function App() {
-  const [showReactComponent, setShowReactComponent] = useState(true);
-  const [showWebComponent, setShowWebComponent] = useState(false);
   const [authToken, setAuthToken] = useState('demo-123');
   const [apiUrl, setApiUrl] = useState('https://api.example.com/widget');
   const webComponentRef = useRef<HTMLElement | null>(null);
@@ -29,23 +32,10 @@ function App() {
     };
   }, []);
 
-  // Update Web Component properties
-  const updateWebComponent = () => {
-    if (webComponentRef.current) {
-      // Using properties
-      (webComponentRef.current as any).authToken = authToken;
-      (webComponentRef.current as any).apiUrl = apiUrl;
-    }
-  };
-
   return (
     <div className="App">
-      <h1>Chat Widget Demo Page</h1>
-      <p>This page demonstrates two ways to use the Chat Widget:</p>
-      <ol>
-        <li>As a React component (original approach)</li>
-        <li>As a Web Component (new approach)</li>
-      </ol>
+      <h1>React Chat Widget - Development Preview</h1>
+      <p>This page demonstrates the React Chat Widget as a web component.</p>
       
       <div className="demo-controls">
         <div className="form-group">
@@ -69,40 +59,9 @@ function App() {
             />
           </label>
         </div>
-        
-        <div className="buttons">
-          <h3>React Component Demo</h3>
-          <button onClick={() => setShowReactComponent(!showReactComponent)}>
-            {showReactComponent ? 'Hide React Component' : 'Show React Component'}
-          </button>
-          
-          {showReactComponent && (
-            <div className="component-demo">
-              <Widget 
-                authToken={authToken}
-                apiUrl={apiUrl}
-              />
-            </div>
-          )}
-          
-          <h3>Web Component Demo</h3>
-          <p><em>The Web Component is automatically added to the page. Use these controls to interact with it.</em></p>
-          <button onClick={() => {
-            if (webComponentRef.current) {
-              (webComponentRef.current as any).open = !showWebComponent;
-              setShowWebComponent(!showWebComponent);
-            }
-          }}>
-            {showWebComponent ? 'Hide Web Component' : 'Show Web Component'}
-          </button>
-          <button onClick={updateWebComponent}>
-            Update Web Component Properties
-          </button>
-        </div>
       </div>
       
-      <h2>Integration Example</h2>      
-      <h3>Web Component Approach</h3>
+      <h2>Integration Example</h2>
       <pre>
         {`<!-- Include the Web Component script -->
 <script type="module" src="https://your-cdn.com/widget/latest/react-chat-widget.js"></script>
@@ -125,11 +84,11 @@ function App() {
   );
 }
 
-// For TypeScript - add the MyWidget to the global Window interface
+// For TypeScript - add the ReactChatWidget to the global Window interface
 declare global {
   interface Window {
-    MyWidget: {
-      init: any;
+    ReactChatWidget: {
+      version: string;
     };
   }
 }

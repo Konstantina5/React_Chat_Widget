@@ -1,6 +1,14 @@
-# React Chat Widget
+# React Chat Widget Web Component
 
-A customizable React chat widget that can be easily embedded into any website. This widget provides a modern chat interface with real-time messaging capabilities through WebSockets.
+A customizable chat widget implemented as a web component that can be easily embedded into any website, regardless of the frontend framework used. This widget provides a modern chat interface with real-time messaging capabilities through WebSockets.
+
+## Features
+
+- **Framework-agnostic**: Works with any website or application, regardless of the technology stack
+- **Shadow DOM encapsulation**: Styles are isolated and won't conflict with your existing CSS
+- **Real-time messaging**: WebSocket integration for instant communication
+- **Customizable**: Configure the widget through attributes or JavaScript properties
+- **Modern UI**: Built with React and exposed as a standard web component
 
 ## Prerequisites
 
@@ -9,7 +17,13 @@ A customizable React chat widget that can be easily embedded into any website. T
 
 ## Installation
 
-### As a dependency in your project
+### Direct script inclusion
+
+```html
+<script src="https://your-cdn.com/widget/latest/react-chat-widget.umd.js"></script>
+```
+
+### As an npm package
 
 ```bash
 npm install react-chat-widget
@@ -30,54 +44,63 @@ yarn
 
 ## Usage
 
-### As a UMD script (global variable)
+### As a Web Component in HTML
+
+```html
+<!-- Include the script -->
+<script src="https://your-cdn.com/widget/latest/react-chat-widget.umd.js"></script>
+
+<!-- Use the web component -->
+<react-chat-widget 
+  auth-token="YOUR_AUTH_TOKEN" 
+  api-url="YOUR_API_URL">
+</react-chat-widget>
+```
+
+### Creating the Web Component programmatically
 
 ```html
 <script src="https://your-cdn.com/widget/latest/react-chat-widget.umd.js"></script>
 <script>
-  window.MyWidget.init({
-    authToken: "<YOUR_AUTHRIZATION_TOKEN>",
-    apiUrl: "<YOUR_API_URL>"
-  }, function(api) {
-    console.log("Widget initialized!");
-    
-    // You can use the api to control the widget
-    // For example, to unmount it:
-    // api.unmount();
-  });
+  // Create the element
+  const widget = document.createElement('react-chat-widget');
+  
+  // Set properties
+  widget.authToken = "YOUR_AUTH_TOKEN";
+  widget.apiUrl = "YOUR_API_URL";
+  
+  // Add to the page
+  document.body.appendChild(widget);
+  
+  // You can also update properties later
+  widget.authToken = "NEW_AUTH_TOKEN";
 </script>
 ```
 
-### As an ES module
+### As an ES module in a modern application
 
 ```javascript
-import { initWidget } from 'react-chat-widget';
+// Import the web component definition to register it
+import 'react-chat-widget';
 
-const api = initWidget({
-  authToken: '<YOUR_AUTHRIZATION_TOKEN>',
-  apiUrl: '<YOUR_API_URL>'
-});
+// Then use it in your HTML template
+// <react-chat-widget auth-token="..." api-url="..."></react-chat-widget>
 
-// Later, to unmount the widget:
-api.unmount();
+// Or create it programmatically
+const widget = document.createElement('react-chat-widget');
+widget.authToken = 'YOUR_AUTH_TOKEN';
+widget.apiUrl = 'YOUR_API_URL';
+document.body.appendChild(widget);
 ```
 
-### As a React component
+## API Reference
 
-```jsx
-import { Widget } from 'react-chat-widget';
+### Attributes/Properties
 
-function App() {
-  return (
-    <div>
-      <Widget 
-        authToken="<YOUR_AUTHRIZATION_TOKEN>"
-        apiUrl="<YOUR_API_URL>"
-      />
-    </div>
-  );
-}
-```
+| Attribute (HTML) | Property (JS) | Type   | Description                                |
+|------------------|---------------|--------|--------------------------------------------|
+| `auth-token`     | `authToken`   | String | Authentication token for the chat service  |
+| `api-url`        | `apiUrl`      | String | URL of the chat API                        |
 
 ## Development
 
@@ -93,7 +116,7 @@ This will start a local development server at http://localhost:5173 with the dem
 
 ## Building
 
-To build the library:
+To build the web component:
 
 ```bash
 npm run build
