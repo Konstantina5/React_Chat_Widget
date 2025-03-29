@@ -1,11 +1,15 @@
 // WebSocket client implementation
+import { addMessage, changeConenctionStatus } from '../state/slices/chatSlice';
 import { WebSocketConfig } from '../types/websocket/client.types';
+import { WebSocketMessage } from '../types/websocket/messageHandlers.types';
+import { useDispatch } from "react-redux";
 
 export class WebSocketClient {
   private socket: WebSocket | null = null;
   private config: WebSocketConfig;
   private reconnectCount = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private dispatch = useDispatch();
 
   constructor(config: WebSocketConfig) {
     this.config = {
@@ -16,7 +20,29 @@ export class WebSocketClient {
   }
 
   public connect(): void {
+    this.socket = new WebSocket(process.env.WS_URL as string);
     
+    this.socket.onopen = () => {
+      this.dispatch(changeConenctionStatus());
+      this.send("rerer"); //TODO delete
+    };
+
+    this.socket.onmessage = (event) => {
+      try {
+        const messageData: WebSocketMessage = JSON.parse(event.data);
+        this.dispatch(addMessage(messageData));
+      } catch (err) {
+        console.error("Error parsing message:", err);
+      }
+    };
+
+    this.socket.onerror = () => {
+      // setError("WebSocket error occurred");
+    };
+
+    this.socket.onclose = () => {
+      this.dispatch(changeConenctionStatus());
+    };
   }
 
   public disconnect(): void {
@@ -27,6 +53,7 @@ export class WebSocketClient {
     if (this.socket) {
       try {
         this.socket.send(data)
+        this.dispatch(addMessage(data));
         return true
       } catch (error) {
         console.error(error)

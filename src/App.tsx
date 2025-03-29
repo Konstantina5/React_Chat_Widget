@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './lib/react-widget-wrapper.tsx';
+import { WebSocketClient } from './lib/websocket/client.ts';
+import { WebSocketConfig } from './lib/types/websocket/client.types.ts';
+import { setupConnectionStatusHandlers } from './lib/websocket/connectionStatus.ts';
 
 /**
  * App Component
@@ -12,6 +15,9 @@ function App() {
   const [authToken, setAuthToken] = useState('demo-123');
   const [apiUrl, setApiUrl] = useState('https://api.example.com/widget');
   const webComponentRef = useRef<HTMLElement | null>(null);
+
+  const ws = new WebSocketClient({} as WebSocketConfig)
+  setupConnectionStatusHandlers(ws);
 
   useEffect(() => {
     // Initialize the Web Component

@@ -11,9 +11,19 @@ const initialState: ChatState = {
 export const chatSlice = createSlice({
   name: 'chat',
   initialState,
-  reducers: { },
+  reducers: {
+    addMessage: (state, action) => {
+      state.messages.push(action.payload);
+    },
+    clearMessages: (state) => {
+      state.messages = [];
+    },
+    changeConenctionStatus: (state) => {
+      state.isConnected = !state.isConnected;
+    },
+   },
 });
 
-export const { } = chatSlice.actions;
+export const { addMessage, clearMessages, changeConenctionStatus } = chatSlice.actions;
 
 export default chatSlice.reducer;

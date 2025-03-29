@@ -2,7 +2,9 @@ import { WebSocketClient } from './client';
 import { MessageType } from '../types/websocket/messageHandlers.types';
 
 // Handler for incoming messages
-export const handleIncomingMessage = (event: MessageEvent): void => { };
+export const handleIncomingMessage = (event: MessageEvent): void => {
+
+};
 
 // Send a message through WebSocket
 export const sendMessage = (
@@ -10,5 +12,5 @@ export const sendMessage = (
   content: string,
   type: MessageType = MessageType.TEXT
 ): boolean => { 
-  return true;
+  return client.send(content);
 };
