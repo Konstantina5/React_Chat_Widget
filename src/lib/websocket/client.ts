@@ -15,12 +15,25 @@ export class WebSocketClient {
     };
   }
 
-  public connect(): void { }
+  public connect(): void {
+    
+  }
 
-  public disconnect(): void { }
+  public disconnect(): void {
+    this.socket?.close()
+  }
 
   public send(data: string | ArrayBufferLike | Blob | ArrayBufferView): boolean { 
-    return false;
+    if (this.socket) {
+      try {
+        this.socket.send(data)
+        return true
+      } catch (error) {
+        console.error(error)
+        return false
+      }
+    }
+    return false
    }
 
   public isConnected(): boolean {
