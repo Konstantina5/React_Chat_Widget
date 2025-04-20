@@ -18,12 +18,12 @@ export const chatSlice = createSlice({
     clearMessages: (state) => {
       state.messages = [];
     },
-    changeConenctionStatus: (state) => {
+    changeConnectionStatus: (state) => {
       state.isConnected = !state.isConnected;
     },
    },
 });
 
-export const { addMessage, clearMessages, changeConenctionStatus } = chatSlice.actions;
+export const { addMessage, clearMessages, changeConnectionStatus } = chatSlice.actions;
 
 export default chatSlice.reducer;

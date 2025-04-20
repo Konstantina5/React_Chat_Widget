@@ -1,5 +1,5 @@
 // WebSocket client implementation
-import { addMessage, changeConenctionStatus } from '../state/slices/chatSlice';
+import { addMessage, changeConnectionStatus } from '../state/slices/chatSlice';
 import { WebSocketConfig } from '../types/websocket/client.types';
 import { WebSocketMessage } from '../types/websocket/messageHandlers.types';
 import { useDispatch } from "react-redux";
@@ -23,7 +23,7 @@ export class WebSocketClient {
     this.socket = new WebSocket(process.env.WS_URL as string);
     
     this.socket.onopen = () => {
-      this.dispatch(changeConenctionStatus());
+      this.dispatch(changeConnectionStatus());
       this.send("rerer"); //TODO delete
     };
 
@@ -41,7 +41,7 @@ export class WebSocketClient {
     };
 
     this.socket.onclose = () => {
-      this.dispatch(changeConenctionStatus());
+      this.dispatch(changeConnectionStatus());
     };
   }
 
