@@ -5,32 +5,19 @@ import { WebSocketClient } from './lib/websocket/client.ts';
 import { WebSocketConfig } from './lib/types/websocket/client.types.ts';
 import { setupConnectionStatusHandlers } from './lib/websocket/connectionStatus.ts';
 
-/**
- * App Component
- * 
- * This component is only used for development and preview purposes.
- * It demonstrates how to use the React Chat Widget as a web component.
- */
 function App() {
-  const [authToken, setAuthToken] = useState('demo-123');
-  const [apiUrl, setApiUrl] = useState('https://api.example.com/widget');
   const webComponentRef = useRef<HTMLElement | null>(null);
-
-  const ws = new WebSocketClient({} as WebSocketConfig)
+  const ws = new WebSocketClient({} as WebSocketConfig);
   setupConnectionStatusHandlers(ws);
 
   useEffect(() => {
-    // Initialize the Web Component
     if (customElements.get('react-chat-widget')) {
       const webComponent = document.createElement('react-chat-widget') as HTMLElement;
-      webComponent.setAttribute('auth-token', authToken);
-      webComponent.setAttribute('api-url', apiUrl);
       document.body.appendChild(webComponent);
       webComponentRef.current = webComponent;
     }
     
     return () => {
-      // Clean up Web Component
       if (webComponentRef.current) {
         document.body.removeChild(webComponentRef.current);
         webComponentRef.current = null;
@@ -38,54 +25,66 @@ function App() {
     };
   }, []);
 
+  const [selectedArticle, setSelectedArticle] = useState("Chunk 1 of document");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [content, setContent] = useState("Test body of the article");
+
+  const handleArticleClick = (article: string) => {
+    setSelectedArticle(article);
+  };
+
   return (
-    <div className="App">
-      <h1>React Chat Widget - Development Preview</h1>
-      <p>This page demonstrates the React Chat Widget as a web component.</p>
-      
-      <div className="demo-controls">
-        <div className="form-group">
-          <label>
-            Auth Token:
-            <input 
-              type="text" 
-              value={authToken} 
-              onChange={(e) => setAuthToken(e.target.value)}
-            />
-          </label>
+    <div className="app-container">
+      <div className="sidebar">
+        <h2 className="sidebar-title">RAG</h2>
+        
+        <div className="search-box">
+          <span className="search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="Search in documents"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
         
-        <div className="form-group">
-          <label>
-            API URL:
-            <input 
-              type="text" 
-              value={apiUrl} 
-              onChange={(e) => setApiUrl(e.target.value)}
-            />
-          </label>
+        <button className="add-button">
+          <span style={{ marginRight: '5px' }}>+</span>
+          Add new document
+        </button>
+        
+        <div className="article-list">
+          <div className="article-group">Name of the document</div>
+          <div 
+            className={`article-item ${selectedArticle === "Chunk 1 of document" ? "active" : ""}`}
+            onClick={() => handleArticleClick("Chunk 1 of document")}
+          >
+            Chunk 1 of document
+          </div>
+          <div 
+            className={`article-item ${selectedArticle === "Chunk 2 of document" ? "active" : ""}`}
+            onClick={() => handleArticleClick("Chunk 2 of document")}
+          >
+            Chunk 2 of document
+          </div>
         </div>
       </div>
       
-      <h2>Integration Example</h2>
-      <pre>
-        {`<!-- Include the Web Component script -->
-<script type="module" src="https://your-cdn.com/widget/latest/react-chat-widget.js"></script>
-
-<!-- Use it in your HTML -->
-<react-chat-widget 
-  auth-token="${authToken}" 
-  api-url="${apiUrl}"
-></react-chat-widget>
-
-<!-- Or create it programmatically -->
-<script>
-  const widget = document.createElement('react-chat-widget');
-  widget.authToken = "${authToken}";
-  widget.apiUrl = "${apiUrl}";
-  document.body.appendChild(widget);
-</script>`}
-      </pre>
+      <div className="main-content">
+        <div className="editor-container">
+          <div className="form-group">
+            <label className="form-label">Content</label>
+              <div 
+                className="editor-content"
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => setContent(e.currentTarget.textContent || '')}
+              >
+                {content}
+              </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
