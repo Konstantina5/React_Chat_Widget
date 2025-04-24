@@ -7,6 +7,8 @@
 
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { store } from './state/store';
 import Widget from './components/Widget';
 import { WidgetProps } from './types/components/Widget.types';
 import styles from './styles/WidgetWrapper.css?raw'
@@ -93,9 +95,15 @@ class ReactChatWidgetElement extends HTMLElement {
       apiUrl: this._apiUrl
     };
     
-    // Render the React component with props
+    // Render the React component with props, wrapped in Redux Provider
     this._root.render(
-      React.createElement(Widget, props)
+      React.createElement(
+        Provider,
+        { 
+          store,
+          children: React.createElement(Widget, props)
+        }
+      )
     );
   }
 }

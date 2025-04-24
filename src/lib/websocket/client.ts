@@ -2,29 +2,37 @@
 import { addMessage, changeConnectionStatus } from '../state/slices/chatSlice';
 import { WebSocketConfig } from '../types/websocket/client.types';
 import { WebSocketMessage } from '../types/websocket/messageHandlers.types';
-import { useDispatch } from "react-redux";
+import { Dispatch } from '@reduxjs/toolkit';
 
 export class WebSocketClient {
   private socket: WebSocket | null = null;
   private config: WebSocketConfig;
   private reconnectCount = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-  private dispatch = useDispatch();
+  private dispatch: Dispatch;
 
-  constructor(config: WebSocketConfig) {
+  constructor(config: WebSocketConfig, dispatch: Dispatch) {
     this.config = {
       reconnectAttempts: 5,
       reconnectInterval: 3000,
       ...config,
     };
+
+    this.dispatch = dispatch;
   }
 
   public connect(): void {
-    this.socket = new WebSocket(process.env.WS_URL as string);
-    
+    if (!this.config.url) {
+      console.error("WebSocket URL is not configured.");
+      return;
+    }
+    this.disconnect();
+    this.socket = new WebSocket(this.config.url);
+
     this.socket.onopen = () => {
-      this.dispatch(changeConnectionStatus());
-      this.send("rerer"); //TODO delete
+      console.log('WebSocket connected');
+      this.dispatch(changeConnectionStatus(true));
+      this.reconnectCount = 0;
     };
 
     this.socket.onmessage = (event) => {
@@ -41,27 +49,42 @@ export class WebSocketClient {
     };
 
     this.socket.onclose = () => {
-      this.dispatch(changeConnectionStatus());
+      console.log('WebSocket disconnected');
+      this.dispatch(changeConnectionStatus(false))
     };
   }
 
   public disconnect(): void {
-    this.socket?.close()
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+    if (this.socket) {
+      this.socket.onopen = null;
+      this.socket.onmessage = null;
+      this.socket.onerror = null;
+      this.socket.onclose = null;
+      this.socket.close();
+      this.socket = null;
+      console.log('WebSocket explicitly disconnected');
+      this.dispatch(changeConnectionStatus(false));
+    }
   }
 
-  public send(data: string | ArrayBufferLike | Blob | ArrayBufferView): boolean { 
-    if (this.socket) {
+  public send(data: string | ArrayBufferLike | Blob | ArrayBufferView): boolean {
+    if (this.isConnected()) {
       try {
-        this.socket.send(data)
-        this.dispatch(addMessage(data));
-        return true
+        this.socket!.send(data);
+        return true;
       } catch (error) {
-        console.error(error)
-        return false
+        console.error("Error sending message:", error);
+        return false;
       }
+    } else {
+      console.error("Cannot send message: WebSocket is not connected.");
+      return false;
     }
-    return false
-   }
+  }
 
   public isConnected(): boolean {
     return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
@@ -69,22 +92,3 @@ export class WebSocketClient {
 
   private handleReconnect(): void { }
 }
-
-let wsClientInstance: WebSocketClient | null = null;
-
-export const getWebSocketClient = (config?: WebSocketConfig): WebSocketClient => {
-  if (!wsClientInstance && config) {
-    wsClientInstance = new WebSocketClient(config);
-  } else if (!wsClientInstance) {
-    throw new Error('WebSocket client not initialized');
-  }
-  return wsClientInstance;
-};
-
-export const initWebSocketClient = (config: WebSocketConfig): WebSocketClient => {
-  if (wsClientInstance) {
-    wsClientInstance.disconnect();
-  }
-  wsClientInstance = new WebSocketClient(config);
-  return wsClientInstance;
-};

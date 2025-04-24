@@ -16,5 +16,4 @@ export const store = configureStore({
 // Required for refetchOnFocus/refetchOnReconnect behaviors
 setupListeners(store.dispatch);
 
-// Export types
 export type { RootState, AppDispatch };
