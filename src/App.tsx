@@ -1,14 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './lib/react-widget-wrapper.tsx';
-import { WebSocketClient } from './lib/websocket/client.ts';
-import { WebSocketConfig } from './lib/types/websocket/client.types.ts';
-import { setupConnectionStatusHandlers } from './lib/websocket/connectionStatus.ts';
 
 function App() {
   const webComponentRef = useRef<HTMLElement | null>(null);
-  const ws = new WebSocketClient({} as WebSocketConfig);
-  setupConnectionStatusHandlers(ws);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (customElements.get('react-chat-widget')) {
@@ -33,6 +29,45 @@ function App() {
     setSelectedArticle(article);
   };
 
+  // Function to handle file selection and upload
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      console.log("No file selected.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://localhost:8000/api/files', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('File uploaded successfully:', result);
+      } else {
+        console.error('File upload failed:', response.status, response.statusText);
+        const errorText = await response.text();
+        console.error('Server response:', errorText);
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleAddDocumentClick = () => {
+    fileInputRef.current?.click();
+  };
+
+
   return (
     <div className="app-container">
       <div className="sidebar">
@@ -48,7 +83,14 @@ function App() {
           />
         </div>
         
-        <button className="add-button">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+
+        <button className="add-button" onClick={handleAddDocumentClick}>
           <span style={{ marginRight: '5px' }}>+</span>
           Add new document
         </button>

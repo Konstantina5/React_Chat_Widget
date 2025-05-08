@@ -6,8 +6,8 @@
   transition: all 0.3s ease-in-out;
 }
 .widget-container.open {
-  width: 400px;
-  height: 600px;
+  width: 600px;
+  height: 1000px;
   max-height: 80vh;
   border-radius: 0px;
   display: flex;
@@ -178,6 +178,7 @@
   color: #999;
   display: block;
   margin-top: 5px;
+  margin-left: 20px;
   text-align: right;
 }
 .chat-bubble.bot .chat-bubble-content a {
