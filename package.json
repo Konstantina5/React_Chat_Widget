@@ -40,6 +40,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
     "dotenv": "^16.4.7",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0"
   }
 }
