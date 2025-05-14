@@ -126,3 +126,22 @@ body {
   font-size: 14px;
   height: 80%;
 }
+
+.spinner {
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border-left-color: #000;
+  animation: spin 1s ease infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

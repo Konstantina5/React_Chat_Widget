@@ -24,6 +24,7 @@ function App() {
   const [selectedArticle, setSelectedArticle] = useState("Chunk 1 of document");
   const [searchQuery, setSearchQuery] = useState("");
   const [content, setContent] = useState("Test body of the article");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleArticleClick = (article: string) => {
     setSelectedArticle(article);
@@ -31,15 +32,18 @@ function App() {
 
   // Function to handle file selection and upload
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      console.log("No file selected.");
+    const files = event.target.files;
+    if (!files || files.length === 0) {
+      console.log("No files selected.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', file);
+    for (let i = 0; i < files.length; i++) {
+      formData.append('file', files[i]); // Corrected key to 'file'
+    }
 
+    setIsLoading(true);
     try {
       const response = await fetch('http://localhost:8000/api/files', {
         method: 'POST',
@@ -48,14 +52,16 @@ function App() {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('File uploaded successfully:', result);
+        console.log('Files uploaded successfully:', result);
       } else {
         console.error('File upload failed:', response.status, response.statusText);
         const errorText = await response.text();
         console.error('Server response:', errorText);
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error('Error uploading files:', error);
+    } finally {
+      setIsLoading(false);
     }
 
     if (fileInputRef.current) {
@@ -85,14 +91,19 @@ function App() {
         
         <input
           type="file"
+          multiple
           ref={fileInputRef}
           onChange={handleFileChange}
           style={{ display: 'none' }}
         />
 
-        <button className="add-button" onClick={handleAddDocumentClick}>
-          <span style={{ marginRight: '5px' }}>+</span>
-          Add new document
+        <button className="add-button" onClick={handleAddDocumentClick} disabled={isLoading}>
+          {isLoading ? (
+            <span className="spinner" style={{ marginRight: '5px' }}></span>
+          ) : (
+            <span style={{ marginRight: '5px' }}>+</span>
+          )}
+          {isLoading ? 'Uploading...' : 'Add new document'}
         </button>
         
         <div className="article-list">
