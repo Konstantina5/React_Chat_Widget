@@ -105,38 +105,10 @@ function App() {
           )}
           {isLoading ? 'Uploading...' : 'Add new document'}
         </button>
-        
-        <div className="article-list">
-          <div className="article-group">Name of the document</div>
-          <div 
-            className={`article-item ${selectedArticle === "Chunk 1 of document" ? "active" : ""}`}
-            onClick={() => handleArticleClick("Chunk 1 of document")}
-          >
-            Chunk 1 of document
-          </div>
-          <div 
-            className={`article-item ${selectedArticle === "Chunk 2 of document" ? "active" : ""}`}
-            onClick={() => handleArticleClick("Chunk 2 of document")}
-          >
-            Chunk 2 of document
-          </div>
-        </div>
       </div>
       
       <div className="main-content">
-        <div className="editor-container">
-          <div className="form-group">
-            <label className="form-label">Content</label>
-              <div 
-                className="editor-content"
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={(e) => setContent(e.currentTarget.textContent || '')}
-              >
-                {content}
-              </div>
-          </div>
-        </div>
+
       </div>
     </div>
   );
